@@ -1,0 +1,1 @@
+﻿namespace CourseHub.Aplication{    public class Class1    {    }}
