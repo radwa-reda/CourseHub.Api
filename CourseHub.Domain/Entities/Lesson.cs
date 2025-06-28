@@ -11,6 +11,7 @@ namespace CourseHub.Domain.Entities
       
         public string Description { get; set; }
         public string VideoUrl { get; set; }
+        public string VideoPublicId { get; set; }
         public int CourseId { get; set; }
         public Course Course { get; set; } = default!;
     }

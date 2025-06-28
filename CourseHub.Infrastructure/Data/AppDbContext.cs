@@ -1,17 +1,17 @@
 ﻿
 using CourseHub.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
 namespace CourseHub.Infrastructure.Data
 {
-    public class AppDbContext:DbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
 
         public DbSet<Course> Courses { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Student> Students { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; } 
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Category> Categories { get; set; } 
@@ -31,7 +31,7 @@ namespace CourseHub.Infrastructure.Data
             // Course → Category
             modelBuilder.Entity<Course>()
                 .HasOne(c => c.Category)
-                .WithMany() // or .WithMany(c => c.Courses) if navigation property exists
+                .WithMany()
                 .HasForeignKey(c => c.CategoryId);
 
             // Course → Reviews
@@ -44,7 +44,8 @@ namespace CourseHub.Infrastructure.Data
             modelBuilder.Entity<Enrollment>()
                 .HasOne(e => e.Course)
                 .WithMany(c => c.Enrollments)
-                .HasForeignKey(e => e.CourseId);
+                .HasForeignKey(e => e.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Lesson → Course
             modelBuilder.Entity<Lesson>()
@@ -52,17 +53,33 @@ namespace CourseHub.Infrastructure.Data
                 .WithMany(c => c.Lessons)
                 .HasForeignKey(l => l.CourseId);
 
-            // Review → User
+            // Review → student
             modelBuilder.Entity<Review>()
-                .HasOne(r => r.User)
+                .HasOne(r => r.Student)
                 .WithMany(u => u.Reviews)
-                .HasForeignKey(r => r.UserId);
+                .HasForeignKey(r => r.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Enrollment → User
+            // Enrollment → student
             modelBuilder.Entity<Enrollment>()
-                .HasOne(e => e.User)
+                .HasOne(e => e.Student)
                 .WithMany(u => u.Enrollments)
-                .HasForeignKey(e => e.UserId);
+                .HasForeignKey(e => e.StudentId).
+                OnDelete(DeleteBehavior.Restrict);
+
+            // ApplicationUser → student
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(a => a.StudentProfile)
+                .WithOne(s => s.User)
+                .HasForeignKey<Student>(s => s.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ApplicationUser → instructor    
+            modelBuilder.Entity<ApplicationUser>()
+               .HasOne(a => a.InstructorProfile)
+               .WithOne(i =>i.User )
+               .HasForeignKey<Instructor>(i => i.UserId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
 
     }
