@@ -9,12 +9,15 @@ namespace CourseHub.Domain.Entities
     public class Review
     {
         public int Id { get; set; }
-        public User User { get; set; } = default!;
-        public int UserId { get; set; }
+        public Student Student { get; set; } = default!;
+        public int StudentId { get; set; }
         public int CourseId { get; set; }
         public Course Course { get; set; } = default!;
 
-        public int Rating { get; set; } // Rating out of 5
+        public int Rating { get; set; } 
         public string Comment { get; set; } = string.Empty;
+
+        //suggest
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

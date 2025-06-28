@@ -1,6 +1,8 @@
-
+using CourseHub.Domain.Entities;
 using CourseHub.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity; // Ensure this namespace is included
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +12,16 @@ builder.Services.AddControllers();
 
 // Register for dbcontext
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.
-    UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add Identity Framework Core
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -28,6 +38,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication(); // Ensure authentication is used before authorization
 app.UseAuthorization();
 
 app.MapControllers();

@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace CourseHub.Domain.Entities
 {
-    public class User: BaseEntity
+    public class Student: BaseEntity
     {
-     
-        public string Email { get; set; }
-        public string PasswordHash { get; set; }
-        public string Role { get; set; } // e.g., "Student", "Instructor", "Admin"
+
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
 

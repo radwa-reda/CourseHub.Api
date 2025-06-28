@@ -9,9 +9,10 @@ namespace CourseHub.Domain.Entities
     public class Instructor: BaseEntity
     {
        
-        public string Email { get; set; }
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
         public string Bio { get; set; }
-        public string ProfilePictureUrl { get; set; }
+        public string ProfileImageUrl { get; set; }
         public ICollection<Course> Courses { get; set; } = new List<Course>();
 
     }
